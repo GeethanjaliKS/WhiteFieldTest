@@ -15,6 +15,7 @@ const UpadteFarm = (props) => {
   });
   const [image, setImage] = useState(updateFormData.f_Image);
   const [successMessage,setSuccessMessage]= useState('')
+  const [errorMessage,setErrorMessage] = useState('')
 
 
   const handleChange = (event) => {
@@ -41,17 +42,21 @@ const UpadteFarm = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!formData.name || !formData.email || !formData.mobile || !formData.designation || !formData.gender || formData.courses.length === 0) {
+      setErrorMessage('Please fill in all required fields.');
+    } else {
+      setErrorMessage('');
       await updatemp({ id: updateFormData.id,name:formData.name,designation:formData.designation,gender:formData.gender,courses:formData.courses,image:image,mobile:formData.mobile,email:formData.email}).then((res)=>res.json()).then((res)=>console.log(res))
       console.log("Form updated");
       // Handle form submission here
     setSuccessMessage('updated employee details successful!');
-  };
+  }};
 
   return (
     <div className="flex items-center justify-center min-h-screen pb-[10%] pt-[5%] bg-blue-100">
     <div className="w-full max-w-sm p-10 bg-white rounded shadow-md shadow-slate-900">
     {successMessage && <p className="text-green-500 font-bold text-2xl" style={{fontFamily:'Caprasimo'}}>{successMessage}</p>}
+    {errorMessage && <p className="text-red-500 font-bold text-2xl" style={{fontFamily:'Caprasimo'}}>{errorMessage}</p>}
       <h1 className="text-3xl font-semibold text-center">Employee Update </h1>
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
         <div className="mb-4">

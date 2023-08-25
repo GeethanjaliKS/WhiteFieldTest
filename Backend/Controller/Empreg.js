@@ -41,13 +41,13 @@ export const empreg = async (req, res) => {
 export const viewemp= async (req, res) => {
     try {
       const emps = await employeereg .find();
-    //   const totalWorker= await worker.count();
-    //   console.log(totalWorker);
+      const totalEmp= await employeereg.count();
+      console.log(totalEmp);
       res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
       res.status(200).json({
         status: 'success',
         data: {
-            emps 
+            emps,totalEmp
         },
       });
     } catch (err) {

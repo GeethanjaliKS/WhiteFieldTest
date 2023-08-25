@@ -5,13 +5,18 @@ import UpadteFarm from './UpdateFarm';
 
 function EmpTable() {
     const [emps, setEmps] = useState([]);
-    // const[searchInput,setSearchInput]=useState()
+    const[totalCount,setTotalCount]=useState(0)
     const [updateForm,setUpdateForm]=useState(false);
     const [updateFormData,setUpdateFormData]=useState([])
+    const [searchValue, setSearchValue] = useState('');
+    const [filteredEmps, setFilteredEmps] = useState(emps);;
     const fetchData = async () => {
         const response = await viewemp();
         const data = await response.json();
         setEmps(data.data.emps);
+        
+        setTotalCount(data.data.totalEmp)
+        console.log(totalCount)
       
      };
     
@@ -49,24 +54,56 @@ function EmpTable() {
           // Handle error or show error notification
         }
       };
+      useEffect(() => {
+        if (emps && emps.length > 0) {
+          const filteredEmps = emps.filter((emp) => {
+            const name = emp.f_Name ? emp.f_Name.toLowerCase() : '';
+            const gender = emp.f_Gender ? emp.f_Gender.toLowerCase() : '';
+            const course = emp.f_Courses ? emp.f_Courses.toLowerCase() : '';
+            const email = emp.f_Email ? emp.f_Email.toLowerCase() : '';
+            const designation = emp.f_Designation ? emp.f_Designation.toLowerCase() : '';
+            const mobile = emp.f_Mobile ? emp.f_Mobile.toLowerCase() : '';
+    
+            return (
+              name.includes(searchValue) ||
+              gender.includes(searchValue) ||
+              course.includes(searchValue) ||
+              email.includes(searchValue) ||
+              designation.includes(searchValue) ||
+              mobile.includes(searchValue)
+            );
+          });
+    
+          setFilteredEmps(filteredEmps);
+        }
+      }, [searchValue, emps]);
+    
+      const handleSearchChange = (event) => {
+        setSearchValue(event.target.value.toLowerCase());
+      };
+    
+    
+      
   
     return (
 <div className='bg-blue-100 pt-[6%] pb-[6%]'>
-      
+  
+<p className='font-bold text-end text-lg mr-6 pb-6'>Total Employee: {totalCount}</p>
     <div className=''>
-        {/* <div className="mb-3 ">
+        <div className="mb-3 ml-[70%]  ">
         <input
-          type="search"
-          className="relative   ml-[65%] mr-[5%] w-1/4 min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
-          id="exampleSearch"
-          placeholder="Search"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        /> */}
-     </div>
+        type="search"
+        placeholder="Search..."
+        value={searchValue}
+        onChange={handleSearchChange}
+        style={{ width: '300px', padding: '10px', fontSize: '16px' }}
+      />
       
+     </div>
+
       {(!updateForm )?
       <center>
+       
     <table className="border-collapse border-xl border-slate-400 bg-slate-100 w-3/4">
 
           {/* <caption className="caption-top font-bold text-lg pt-10 font-serif">MEMBER DETAILS</caption> */}
@@ -86,7 +123,7 @@ function EmpTable() {
             </tr>
           </thead>
           <tbody className=''>
-            {emps.map((emp,index) => (
+            {filteredEmps.map((emp,index) => (
             
               <tr key={emp._id}>
               
@@ -120,6 +157,7 @@ function EmpTable() {
                <UpadteFarm updateFormData={updateFormData} updateForm={updateForm}/> 
             }
           
+        </div>
         </div>
       
     

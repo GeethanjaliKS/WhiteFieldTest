@@ -45,13 +45,13 @@ const Header = ({ isLoggedIn,adminname }) => {
                 to="/emp"
                 className="text-blue-900 hover:text-gray-950 font-medium text-base"
               >
-                Employee List
+                Create Employee
               </Link>
               <Link
                 to="/emptable"
                 className="text-blue-900 hover:text-gray-950 font-medium text-base"
               >
-                View Employees
+                Employee List
               </Link>
               <span className="text-blue-900 hover:text-gray-950 font-medium text-base">
               WelCome,  {adminname}
